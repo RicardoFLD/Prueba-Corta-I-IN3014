@@ -10,13 +10,22 @@ namespace Booking.DatabaseHelper
 {
     public class Database
     {
-        string cnn = "Data Source=localhost.;Initial Catalog=Booking;Integrated Security=True";
+        const string database = "Booking";
+        const string server = "localhost";
+        string cnn = $"Data Source={server};Initial Catalog={database};Integrated Security=True";
 
-        public void Open()
+        public DataTable GetResorts()
         {
-            SqlConnection connetion = new SqlConnection(cnn);
-            connetion.Open();
-            connetion.Close();
+            return ExecuteQuery("[dbo].[spGetResorts]", null);
+        }
+
+        public DataTable GetResort(int id)
+        {
+            List<SqlParameter> param = new List<SqlParameter>()
+            {
+                new SqlParameter("@id", id),
+            };
+            return ExecuteQuery("[dbo].[spGetResort]", param);
         }
 
         public void SaveBooking(m.Book book)
